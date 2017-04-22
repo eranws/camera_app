@@ -52,12 +52,22 @@ class App:
                 # vis[h0:h1,w1+(i-A/2)*m:w1+(i+1-A/2)*m] = cv2.mean(vis[h0:h1,w1+(i-A/2)*m:w1+(i+1-A/2)*m])[0]
                     vis[h1+(j-A/2)*n:h1+(j+1-A/2)*n,w1+(i-A/2)*m:w1+(i+1-A/2)*m] = cv2.mean(vis[h1+(j-A/2)*n:h1+(j+1-A/2)*n,w1+(i-A/2)*m:w1+(i+1-A/2)*m])[0]
 
+            
+            vis[:, 0:w1-(A/2)*m] = 255 
+            vis[:, w1+(A/2+1)*m:] = 255 
+
             cv2.imshow('frame', vis)
             ch = cv2.waitKey(10)
             if ch == 27:
                 break
             if ch == ord(' '):
                 self.paused = not self.paused
+
+            if ch == ord('s'):
+                fn = 'shot.bmp' 
+                cv2.imwrite(fn, vis)
+                print fn, 'saved'
+
 
 if __name__ == '__main__':
     print __doc__
