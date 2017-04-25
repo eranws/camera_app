@@ -27,6 +27,7 @@ class App:
         _, self.frame = self.cap.read()
         cv2.imshow('frame', self.frame)
         self.paused = paused
+        self.state = 0
 
     def run(self):
         while True:
@@ -52,9 +53,20 @@ class App:
                 # vis[h0:h1,w1+(i-A/2)*m:w1+(i+1-A/2)*m] = cv2.mean(vis[h0:h1,w1+(i-A/2)*m:w1+(i+1-A/2)*m])[0]
                     vis[h1+(j-A/2)*n:h1+(j+1-A/2)*n,w1+(i-A/2)*m:w1+(i+1-A/2)*m] = cv2.mean(vis[h1+(j-A/2)*n:h1+(j+1-A/2)*n,w1+(i-A/2)*m:w1+(i+1-A/2)*m])[0]
 
-            
-            vis[:, 0:w1-(A/2)*m] = 255 
-            vis[:, w1+(A/2+1)*m:] = 255 
+            if self.state == 0:
+                vis[:, 0:w1-(A/2)*m] = 0 
+                vis[:, w1+(A/2+1)*m:] = 0 
+            if self.state == 1:
+                vis[:, 0:w1-(A/2)*m] = 0 
+                vis[:, w1+(A/2+1)*m:] = 255 
+            if self.state == 2:
+                vis[:, 0:w1-(A/2)*m] = 255 
+                vis[:, w1+(A/2+1)*m:] = 0 
+            if self.state == 3:
+                vis[:, 0:w1-(A/2)*m] = 255 
+                vis[:, w1+(A/2+1)*m:] = 255 
+
+
 
             cv2.imshow('frame', vis)
             ch = cv2.waitKey(10)
@@ -67,6 +79,12 @@ class App:
                 fn = 'shot.bmp' 
                 cv2.imwrite(fn, vis)
                 print fn, 'saved'
+
+            if ch == ord('n'):
+                # self.state += 1
+                # self.state %= 4
+                self.state %= 2
+                self.state += 1
 
 
 if __name__ == '__main__':
